@@ -10,5 +10,6 @@
   <%= button_to 'Delete', book_path(book), :method => :delete, :data => { :confirm => "Are you sure?" } %>
   </li>
 <% end %>
+<%= paginate @books %>
 </ul>
 <%= link_to 'New Book', new_book_path %>

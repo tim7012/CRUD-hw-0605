@@ -1,7 +1,7 @@
 class BooksController < ApplicationController
 
 def index
-  @books = Book.all
+  @books = Book.page(params[:page]).per(5)
 end
 
 def show
@@ -19,9 +19,12 @@ end
   def create
     @book = Book.new(books_params)
 
-    @book.save
-
-    redirect_to books_url :action => :index #告訴遊覽器 HTTP code: 303
+    if @book.save
+      redirect_to books_url
+      flash[:notice] = "Book was successfully created"
+    else
+      render :action => :new
+    end
   end
   #GET /events/edit/ :id
   def edit
@@ -30,15 +33,18 @@ end
 
   #POST /events/udpate/:id
   def update
-      @book = Book.find(params[:id])
 
-      @book.update(books_params)
-
-      redirect_to book_url(@book), :action => :show, :id => @book
+    if @book.update(books_params)
+      redirect_to book_url(@book)
+      flash[:notice] = "Book was successfully updated"
+    else
+      render :action => :edit
+    end
   end
 
   #GET /events/destroy/:id
   def destroy
+    flash[:alert] = "Book was successfully deleted"
     @book = Book.find(params[:id])
     @book.destroy
     redirect_to books_url :action => :index
