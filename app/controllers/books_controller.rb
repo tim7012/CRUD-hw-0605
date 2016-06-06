@@ -34,7 +34,8 @@ end
   #POST /events/udpate/:id
   def update
 
-    if @book.update(books_params)
+    if @book = Book.find(params[:id])
+      @book.update(books_params)
       redirect_to book_url(@book)
       flash[:notice] = "Book was successfully updated"
     else
